@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *"> -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <meta charset="utf-8">
+
+       
+        <!-- Load in less/css -->
+        <link rel="stylesheet" type="text/css" href="css/app.css">
+
+        <script type="text/javascript" src="js/dependacies/jquery.min.js"></script>
+        <script type="text/javascript" src="js/dependacies/jquery.waitforimages.min.js"></script>
+        <script type="text/javascript" src="js/dependacies/underscore.min.js"></script>
+
+        <script type="text/template" class="matchmaker-list-template">
+            <div class="wrapper-scroller" style="background-image:url('<%= bg%>')">
+                <div class="scroller">   
+                    <div class="breadcrumb">
+                        <h3 class="text"><%= bc %></h3>
+                    </div>
+                    <ul class="list">
+                        <%_.each(cats,function(cat){%>
+                        <li class="item <%=cat.id%>" data-id="<%= cat.id%>" >
+                            <h3 class="text"><%=cat.name%></h3>
+                        </li>
+                        <%})%>
+                    </ul>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" class="matchmaker-desc-template">
+            <div class="wrapper-scroller <%= bgcolor %>">
+                <div class="scroller">   
+                    <div class="breadcrumb">
+                        <h3 class="text"><%= bc %></h3>
+                        <h3 class="text startagain">Start again</h3>
+                    </div>
+                    <div class="content">
+                        <div class="grapes content-box">
+                            <h2 class="title">Grapes</h2>
+                            <% _.each(grapes,function(grape){%>
+                            <h3 class="text"><%=grape%></h3>
+                            <% }) %>
+                        </div>
+                        <div class="styles content-box">
+                            <h2 class="title">Styles</h2>
+                            <% _.each(styles,function(style){%>
+                            <h3 class="text"><%=style%></h3>
+                            <% }) %>
+                        </div>
+                        <div class="note content-box">
+                            <h2 class="title">Description</h2>
+                            <% _.each(notes,function(note){%>
+                             <p class="text"><%=note%></p>
+                            <% }) %>
+                        </div>
+                    </div>
+                    <div class="share">
+                        <div class="box sharebutton"><h3 class="text">Share with a friend</h3></div>
+                        
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script type="text/template" class="quiz-template">
+            <div class="tab-arrows">
+                <div class="tab-container">
+                    <div class="tab-slider"></div>
+                </div>
+            </div>
+            <div class="wrapper-scroller content">
+                <div class="scroller">
+                    <div class="content-wrapper" <%if(typeof(curr.img)!=='undefined'&&curr.img!==''){%>style="background-image:url('<%=curr.img.replace(/^\/\//i,'http://')%>');"<%}%>>
+                       
+                        <ul class="quiz-list">
+                        <% _.each(curr.questions,function(question,index){ %>
+                            <li class="quiz-item" data-id="<%= index %>">
+                                 <div class="question">
+                                    <h3 class="title">Question <%= numberToTextName(index) %></h3>
+                                    <p class="desc">
+                                        <%= question.q %>
+                                    </p>
+                                </div>
+                                <div class="answer">
+                                    <ul class="answer-list">
+                                        <% _.each(question.a, function(answer,indexx){ %>
+                                        <li class="answer-item" data-quiz="<%= index %>" data-id="<%= indexx %>">
+                                            <h3 class="text">
+                                                <%= answer %>     
+                                            </h3>
+                                        </li>
+                                        <% }) %>
+                                    </ul>
+                                </div>
+                            </li>
+                           <% }) %>
+                           <li class="score quiz-item">
+                                <div class="yourscore">
+                                    <!-- Inject score here -->
+                                </div>   
+                                <div class="share">
+                                    <div class="sharebox">
+                                        <h3 class="text">share with a friend</h3>
+                                    </div>
+                                </div>        
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="previous-container">
+                        <div class="previous-button">
+                            <h3 class="text">
+                                or select one of your previous quizzes
+                            </h3>
+                        </div>
+                        <ul class="previous-list">
+                        <% _.each(prev,function(prev,index){ %>
+                            <% if(typeof(allowed)==='undefined' || $.isEmptyObject(allowed) || allowed[prev.index]!==prev.index){ %> 
+                            <li class="previous-item noclick">
+                            <%}else{%>
+                            <li class="previous-item" data-id="<%= prev.index %>">
+                            <%}%>    
+                                <h3 class="text">
+                                    <%if(typeof(prev.name)!=='undefined'){%>
+                                        <%= prev.name %>
+                                    <%}%>
+                                </h3>
+                            </li>
+                        <% }) %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <script type="text/template" class="quiz-score-template">
+            <div class="score-container">
+                <h1 class="title"><%=score%>/<%=maxscore%></h1>
+                <h3 class="text"><%= desc %></h3>
+            </div>
+        </script>
+        <script type="text/template" class="quiz-list-template">
+            <div class="content-wrapper" <%if(typeof(curr.img)!=='undefined'&&curr.img!==''){%>style="background-image:url('<%=curr.img.replace(/^\/\//i,'http://')%>');"<%}%>>
+                <ul class="quiz-list">
+                <% _.each(curr.questions,function(question,index){ %>
+                    <li class="quiz-item" data-id="<%= index %>">
+                         <div class="question">
+                            <h3 class="title">Question <%= numberToTextName(index) %></h3>
+                            <p class="desc">
+                                <%= question.q %>
+                            </p>
+                        </div>
+                        <div class="answer">
+                            <ul class="answer-list">
+                                <% _.each(question.a, function(answer,indexx){ %>
+                                <li class="answer-item" data-quiz="<%= index %>" data-id="<%= indexx %>">
+                                    <h3 class="text">
+                                        <%= answer %>     
+                                    </h3>
+                                </li>
+                                <% }) %>
+                            </ul>
+                        </div>
+                    </li>
+                   <% }) %>
+                   <li class="score quiz-item">
+                        <div class="yourscore">
+                            <!-- Inject score here -->
+                        </div>   
+                        <div class="share">
+                            <div class="sharebox">
+                                <h3 class="text">share with a friend</h3>
+                            </div>
+                        </div>        
+                    </li>
+                </ul>
+            </div>
+        </script>
+
+        <!-- Lesson Templates -->
+        <script type="text/template" class="lesson-main-template">
+            <div class="content-wrapper">
+                <div class="lesson-container">
+                    <ul class="lesson-list">
+                    <% _.each(curr,function(lesson,index){ %>
+                        <li class="lesson-item" data-id="<%= lesson.set%>" data-cat="<%= lesson.index%>">
+                            <div class="image image-load" <%if(typeof(lesson.imgs)!=='undefined'){%>style="background-image:url('<%=lesson.imgs.top.replace(/^\/\//i,'http://')%>');"<%}%>></div>
+                        </li>
+                    <% }) %>
+                    </ul>
+                    <div class="bar">
+                        <div class="content">
+                            <ul class="bar-list" style="width:<%=curr.length*100%>%">
+                            <% _.each(curr,function(lesson,index){ %>
+                                <li class="bar-item <%if(index===0){%>active<%}%>" data-id="<%= lesson.set%>" data-cat="<%= lesson.index%>" style="width:<%=(100/curr.length)%>%">
+                                    <h3 class="text">
+                                        <%if(typeof(lesson.title)!=='undefined'){%>
+                                            <%= lesson.title %>
+                                        <%}%>
+                                    </h3>
+                                </li>
+                            <% }) %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="previous-container">
+                    <div class="previous-button">
+                        <h3 class="text">
+                            or select one of your previous lessons
+                        </h3>
+                    </div>
+                    <ul class="previous-list">
+                    <% _.each(prev,function(prevlesson,index){ %>
+                        <% _.each(prevlesson,function(prev,indexx){ %>
+                        <% if(typeof(allowed)==='undefined' || $.isEmptyObject(allowed) || allowed[index]!==index){ %>
+                        <li class="previous-item noclick">
+                        <%}else{%>
+                        <li class="previous-item" data-id="<%= prev.set%>" data-cat="<%= prev.index%>">
+                        <%}%>    
+                            <h3 class="text">
+                                <%if(typeof(prev.title)!=='undefined'){%>
+                                    <%= prev.title %>
+                                <%}%>
+                            </h3>
+                        </li>
+                        <% }) %>
+                    <% }) %>
+                    </ul>
+                </div>
+               
+            </div>
+        </script>
+        <script type="text/template" class="lesson-taste-list-template">
+            
+              <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext">
+                        <h2 class="text">
+                            <% if(typeof(nCat)!=='undefined'){ %>
+                            <%= nCat %>
+                            <%}%>
+                        </h2>
+                    </div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="wrapper-scroller">
+                    <div class="scroller">
+                        <ul class="list">
+                            <% _.each(parts,function(part,_index){ %>
+                            <li class="list-item content-box" data-id="<%= set%>" data-cat="<%= index%>">
+                                <div class="image image-load" <%if(typeof(part.icon)!=='undefined'){%>style="background-image:url('<%=part.icon.replace(/^\/\//i,'http://')%>')"<%}%>></div>
+                                <h2 class="title">
+                                    <%if(typeof(part.title)!=='undefined'){%>
+                                        <%= part.title%>
+                                    <%}%>
+                                </h2>
+                                <%if(typeof(part.p)!=='undefined'){%>
+                                <p class="text">
+                                    <% _.each(part.p,function(para,indexx){ %>
+                                        <% if(indexx <= 0){%>
+                                        <%= trimStringLength(para,93) %>
+                                        <%}%>
+                                    <% }) %>
+                                </p>
+                                <%}%>
+                            </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                </div>
+        </script>
+
+        <script type="text/template" class="lesson-taste-desc-template">
+             
+              <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext">
+                        <h2 class="text">
+                            <% if(typeof(nCat)!=='undefined'){ %>
+                            <%= nCat %>
+                            <%}%>
+                        </h2>
+                    </div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="desc-content-container">
+                     <div class="content">
+                        <div class="icon-container">
+                            <ul class="icon-list">
+                            <% _.each(parts,function(part, index){ %>
+                            <li class="icon-item <% if(index===0){%>active<%}%>" >
+                            <div class="image image-load" <% if(typeof(part.icon)!=='undefined'){%>style="background-image:url('<%=part.icon.replace(/^\/\//i,'http://')%>');"<% } %>></div>
+                            </li>
+                            <% }) %>
+                            </ul>
+                        </div>
+                        <div class="desc-container">
+                            <ul class="desc-list">
+                            <% _.each(parts,function(part, index){ %>
+                                <li id="desc-item-<%=index%>" class="desc-item">
+                                     <div class="scroller">    
+                                        <% if(typeof(part.name)!=='undefined'){%>
+                                        <h4 class="part-text">
+                                            <%= part.name %>
+                                        </h4>
+                                        <% } %>
+                                        <% if(typeof(part.title)!=='undefined'){%>
+                                        <h2 class="title">
+                                            <%= part.title %>
+                                        </h2>
+                                        <% } %>
+                                        <% if(typeof(part.subtitle)!=='undefined'){%>
+                                        <h3 class="subtitle">
+                                            <%= part.subtitle %>
+                                        </h3>
+                                        <% } %>
+                                        <%if(typeof(part.p)!=='undefined'){%>
+                                            <% _.each(part.p,function(para,indexx){ %>
+                                                <p class="text">
+                                                <%= para %>
+                                                </p>
+                                            <% }) %>
+                                        <%}%>
+                                        <% if(typeof(part.img)!=='undefined' && part.img!==''){%>
+                                        <div class="image image-load" style="background-image:url('<%=part.img.replace(/^\/\//i,'http://')%>');"></div><% } %>
+                                    </div>
+                                </li>
+                                <% }) %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+        </script>
+
+        <!-- My wines template -->
+        <script type="text/template" class="mywines-main-template">
+            <div class="content-wrapper">
+                <div class="wine-container">
+                    <ul class="wine-list">
+                    <% _.each(curr,function(wine,index){ %>
+                        <li class="wine-item" data-id="<%= wine.set%>" data-cat="<%= wine.index%>" data-product-link="http://www.perfectcellar.com<%= wine.purl.replace(/^\/\//i,'')%>">
+                            <div class="image image-load" <%if(typeof(wine.pimg)!=='undefined'){%>style="background-image:url('<%=wine.pimg.replace(/^\/\//i,'http://')%>');"<%}%>></div>
+                        </li>
+                    <% }) %>
+                    </ul>
+                    <div class="click-me"></div>
+                    <div class="bar">
+                        <div class="content">
+                            <ul class="bar-list" style="width:<%=curr.length*100%>%">
+                            <% _.each(curr,function(wine,index){ %>
+                                <li class="bar-item <%if(index===0){%>active<%}%>" data-id="<%= wine.set%>" data-cat="<%= wine.index%>" style="width:<%=(100/curr.length)%>%">
+                                    <h3 class="text">
+                                        <%if(typeof(wine.title)!=='undefined'){%>
+                                            <%= wine.title %>
+                                        <%}%>
+                                    </h3>
+                                </li>
+                            <% }) %>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="previous-container">
+                    <div class="previous-button">
+                        <h3 class="text">
+                            or select one of your previous wines
+                        </h3>
+                    </div>
+                    
+                    </ul><ul class="previous-list">
+                    <% if(typeof(prev)!=='undefined'){ %>
+                    <% _.each(prev,function(prev,index){ %>
+                        <li class="previous-item"  data-id="<%= prev.set%>" data-cat="<%= prev.index%>">
+                            <h3 class="text">
+                                <%if(typeof(prev.title)!=='undefined'){%>
+                                    <%= prev.title %>
+                                <%}%>
+                            </h3>
+                        </li>
+                    <% }) %>
+                    <%}%>
+                </div>
+               
+            </div>
+        </script>
+        <script type="text/template" class="mywines-list-template">
+             <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text"><%if(typeof(title)!=='undefined'){%><%= title %><%}%></h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="wrapper-scroller">
+                    <div class="scroller">
+                        <% if(typeof(sections)!=='undefined' && $.isArray(sections) && typeof(sections[0].video)!=='undefined' && sections[0].video!==''){%>
+                        <iframe class="video paraScroll" width=<%=window.innerWidth%> height="150" src="<%=sections[0].video.replace(/^\/\//i,'http://')%>?controls=0&showinfo=0"></iframe>
+                        <%}%>
+                        
+                        <ul class="list">
+                            <% _.each(sections,function(part,_index){ %>
+                            <li class="list-item content-box" data-id="<%= set%>" data-cat="<%= index%>" data-section="<%= _index%>">
+                                <div class="image image-load" <%if(typeof(part.icon)!=='undefined'){%>style="background-image:url('<%=part.icon.replace(/^\/\//i,'http://')%>')"<%}%>></div>
+                                <h2 class="title">
+                                    <%if(typeof(part.title)!=='undefined'){%>
+                                        <%= part.title%>
+                                    <%}%>
+                                </h2>
+                                <%if(typeof(part.p)!=='undefined'){%>
+                                <p class="text">
+                                    <% _.each(part.p,function(para,indexx){ %>
+                                        <% if(indexx <= 0){%>
+                                        <%= trimStringLength(para,93) %>
+                                        <%}%>
+                                    <% }) %>
+                                </p>
+                                <%}%>
+                            </li>
+                            <% }) %>
+                        </ul>  
+                    </div>
+                </div>
+        </script>
+
+
+        <script type="text/template" class="mywines-desc-template">
+            <div class="mp3-header">
+                <div class="icon-left back-icon"></div>
+                <div class="icon-middle hastext"><h2 class="text"><%if(typeof(content.title)!=='undefined'){%><%= content.title %><%}%></h2></div>
+                <div class="icon-right home-icon"></div>
+            </div>
+            <%if(typeof(content.sections)!=='undefined'){%>
+            <div class="desc-content-container">
+                 <div class="content">
+                   
+                    <div class="icon-container">
+                        <ul class="icon-list">
+                         <% if($.isArray(content.sections) && content.sections.length >= sIndex){%>
+                        
+                        <% _.each(content.sections,function(part, index){ %>
+                            <li class="icon-item <% if(index===0){%>active<%}%>" >
+                            <div class="image image-load" <% if(typeof(part.icon)!=='undefined'){%>style="background-image:url('<%=part.icon.replace(/^\/\//i,'http://')%>');"<% } %>></div>
+                            </li>
+                        <% }) %>
+                         <%}%>
+                        </ul>
+                    </div>
+                    <div class="desc-container">
+                        <ul class="desc-list">
+                        <% _.each(content.sections,function(part, index){ %>
+                            <li id="desc-item-<%=index%>" class="desc-item">
+                                 <div class="scroller">    
+                                    <% if(typeof(part.name)!=='undefined'){%>
+                                    <h4 class="part-text">
+                                        <%= part.name %>
+                                    </h4>
+                                    <% } %>
+                                    <% if(typeof(part.title)!=='undefined'){%>
+                                    <h2 class="title">
+                                        <%= part.title %>
+                                    </h2>
+                                    <% } %>
+                                    <% if(typeof(part.subtitle)!=='undefined'){%>
+                                    <h3 class="subtitle">
+                                        <%= part.subtitle %>
+                                    </h3>
+                                    <% } %>
+                                    <%if(typeof(part.p)!=='undefined'){%>
+                                        <% _.each(part.p,function(para,indexx){ %>
+                                            <p class="text">
+                                            <%= para %>
+                                            </p>
+                                        <% }) %>
+                                    <%}%>
+                                    <% if(typeof(part.img)!=='undefined' && part.img!==''){%>
+                                    <div class="image image-load" style="background-image:url('<%=part.img.replace(/^\/\//i,'http://')%>');"></div><% } %>
+                                </div>
+                            </li>
+                            <% }) %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+        </script>
+
+        
+        <script type="text/template" class="ajax-loader-template">
+            <div class="ajax-loader fadeIn"><div class='uil-ring-css'><div></div></div></div>
+        </script>
+
+        <title>Perfect Cellar</title>
+    </head>
+    <body>
+
+        <main role="main">
+            <section id="home" class="active">
+                <div class="mp3-header">
+                    <div class="icon-left"></div>
+                    <div class="icon-middle"></div>
+                    <div class="icon-right account-icon"></div>
+                </div>
+                <div class="content">
+                    <div class="section-selection">
+                        <div class="orbs">
+                            <ul class="orblist">
+                                <li class="orb mm active" data-id="matchmaker">
+                                </li>
+                                <li class="orb mw" data-id="mywines">
+                                </li>
+                                <li class="orb ls" data-id="lessons">
+                                </li>
+                                <li class="orb qz" data-id="quizzes">
+                                </li>
+                                <li class="orb orb-center"></li>
+                            </ul>
+                        </div>
+                        <div class="orb-text">
+                            <ul class="orb-text-list">
+                                <li class="orb-text-item active" data-id="matchmaker">
+                                    <h3 class="text">matchmaker</h3>
+                                </li>
+                                <li class="orb-text-item" data-id="mywines">
+                                    <h3 class="text">my wines</h3>
+                                </li>
+                                <li class="orb-text-item" data-id="lessons">
+                                    <h3 class="text">lessons</h3>
+                                </li>
+                                <li class="orb-text-item" data-id="quizzes">
+                                    <h3 class="text">quizzes</h3>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bottom-text">
+                        <ul class="orb-desc-list">
+                            <li class="orb-desc-item active" data-id="matchmaker">
+                                <h3 class="text">
+                                    Food and wine pairings for you to access in a restaurant or at home. Simply choose the dish you’re going to eat and we’ll suggest the wine!
+                                </h3>
+                            </li>
+                            <li class="orb-desc-item" data-id="mywines">
+                                <h3 class="text">
+                                    Discover the wines in the My Perfect 3 Wine Discovery Box. Videos, stories of our winemakers &amp; the food to enjoy whilst you drink.
+                                </h3>
+                            </li>
+                            <li class="orb-desc-item" data-id="lessons">
+                                <h3 class="text">
+                                    Lessons to enhance your knowledge and enjoyment of wine whilst you drink the bottles in this month's Wine Discovery Box by My Perfect 3.
+                                </h3>
+                            </li>
+                            <li class="orb-desc-item" data-id="quizzes">
+                                <h3 class="text">
+                                    Put your knowledge to the test with your monthly quiz! All tests are related to monthly wines and lessons to help you learn more about wine.
+                                </h3>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="login" class="">
+                <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle"></div>
+                    <div class="icon-right"></div>
+                </div>
+                <div class="wrapper-scroller content">
+                    <div class="scroller">
+                        <div class="title">
+                            <h3 class="text">Member log in</h3>
+                        </div>
+                        <div class="fields">
+                            <p class="opening-text">
+                                Log in or sign up now to access the world of wine with videos & interactive lessons and quizzes
+                            </p>
+                            <div class="form">
+                                <input name="email" type="email" class="input-email" placeholder="Email" />
+                                <input name="password" type="password" class="input-password" placeholder="Password" />
+                                <div class="sign-in">
+                                    <h3 class="text">
+                                        Sign in
+                                    </h3>
+                                </div>
+                                <h4 class="forgotten-password">
+                                    Recover password?
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="forgotten-password" class="">
+                <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle"></div>
+                    <div class="icon-right"></div>
+                </div>
+                <div class="wrapper-scroller content">
+                    <div class="scroller">
+                        <div class="title">
+                            <h3 class="text">Recover Password</h3>
+                        </div>
+                        <div class="fields">
+                            <p class="opening-text">
+                                Tell us your email address and we will send you an email to recover your password.
+                            </p>
+                            <div class="form">
+                                <input name="email" type="email" class="input-email" placeholder="Email" />
+                                <div class="submit">
+                                    <h3 class="text">
+                                        Submit
+                                    </h3>
+                                </div>
+                            </div>
+                            <p class="success">
+                                Thanks, you should receive an email from us soon.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="matchmaker-cat-1" class="">
+                <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text">matchmaker</h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="content-wrapper">
+                    <!-- inject content here -->
+                </div>
+            </section>
+
+             <section id="matchmaker-cat-2" class="">
+                <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text">matchmaker</h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="content-wrapper">
+                    <!-- inject content here -->
+                </div>
+            </section>
+
+            <section id="matchmaker-cat-3" class="">
+                <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text">matchmaker</h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="content-wrapper">
+                    <!-- inject content here -->
+                </div>
+            </section>
+
+            <section id="matchmaker-desc" class="">
+                 <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text">matchmaker</h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="content-wrapper">
+                    <!-- inject content here -->
+                </div>
+            </section>
+
+            <section id="quizzes" class="">
+                <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text">This months quiz</h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <!-- Inject template -->
+            </section>
+
+            <section id="lessons" class="">
+                <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text">My Lessons</h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                <div class="wrapper-scroller">
+                    <div class="scroller">
+                        <div class="subheader">
+                            <h3 class="title">Lessons of the month</h3>
+                            <div class="image"></div>
+                        </div>
+                        <!-- inject template -->
+                    </div>
+                </div>
+            </section>
+            <section id="lesson-how-to-taste-list" class="">
+              <!-- Inject template -->
+            </section>
+            <section id="lesson-how-to-taste-desc" class="">
+               <!-- Inject template -->
+            </section>
+
+            <!-- My Wines -->
+            <section id="mywines" class="">
+                 <div class="mp3-header">
+                    <div class="icon-left back-icon"></div>
+                    <div class="icon-middle hastext"><h2 class="text">My wines</h2></div>
+                    <div class="icon-right home-icon"></div>
+                </div>
+                 <div class="wrapper-scroller">
+                    <div class="scroller">
+                        <div class="subheader">
+                            <h3 class="title">Wines of the month</h3>
+                        </div>
+                        <!-- inject template -->
+                    </div>
+                </div>
+            </section>
+            <section id="mywines-list" class="">
+               <!-- inject template -->
+            </section>
+             <section id="mywines-desc" class="">
+                <!-- Inject template -->
+            </section>
+
+            <!-- <div class="trans-overlay" style="display:none !important;"></div> -->
+        </main>
+
+        <!-- Stop people from touching things when they shouldn't! -->
+        <section class="disable-overlay"></section>
+
+        <!-- Cordova js, do not remove -->
+        <script type="text/javascript" src="cordova.js"></script>
+
+        <!-- Dependacies / helper files -->
+        <script type="text/javascript" src="js/dependacies/fastclick.min.js"></script>
+        <script type="text/javascript" src="js/dependacies/Tween.min.js"></script>
+        <script type="text/javascript" src="js/dependacies/moment.min.js"></script>
+        <script type="text/javascript" src="js/dependacies/iScroll.min.js"></script>
+        <script type="text/javascript" src="js/dependacies/hammer.min.js"></script>
+        <script type="text/javascript" src="js/helper/statusbar.min.js"></script>
+        <script type="text/javascript" src="js/helper/helper.min.js"></script>
+        <script type="text/javascript" src="js/helper/events.min.js"></script>
+        <script type="text/javascript" src="js/handler.min.js"></script>
+        <script type="text/javascript" src="js/parallaxImageScroll.min.js"></script>
+        <script type="text/javascript" src="js/helper/popup.min.js"></script>
+        <script type="text/javascript" src="js/networking.min.js"></script>
+        <script type="text/javascript" src="js/user.min.js"></script>
+        <script type="text/javascript" src="js/messages.min.js"></script>
+        <script type="text/javascript" src="js/permissions.min.js"></script>
+        <script type="text/javascript" src="js/share.min.js"></script>
+        <script type="text/javascript" src="js/home.min.js"></script>
+        <script type="text/javascript" src="js/login.min.js"></script>
+        <script type="text/javascript" src="js/forgottenpassword.min.js"></script>
+        <script type="text/javascript" src="js/matchmaker.min.js"></script>
+        <script type="text/javascript" src="js/quizzes.min.js"></script>
+        <script type="text/javascript" src="js/lessons.min.js"></script>
+        <script type="text/javascript" src="js/mywines.min.js"></script>
+
+        <!-- Main app file -->
+        <script type="text/javascript" src="js/app.min.js"></script>
+    </body>
+</html>

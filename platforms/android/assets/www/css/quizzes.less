@@ -1,0 +1,479 @@
+#quizzes{
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction:column;
+	flex-direction: column;
+	background-color:@colorWhite;
+
+	>.tab-arrows{
+		position: relative;
+		width: 100%;
+		height: 5px;
+		background-color:@colorBase;
+		.tab-container{
+			position: relative;
+			width: 100%;
+			height: 100%;
+			-webkit-transition:-webkit-transform 0.4s 0.2s ease-out;
+			transition:transform 0.4s 0.2s ease-out;
+
+			.tab-slider{
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 17vw; 
+				height: 100%;
+				background-color:@colorYellow;
+			}
+		}
+	}
+	>.content{
+		position: relative;
+		width: 100%;
+		height: calc(100% ~"-" @mp3HeaderHeight ~"-" 5px);
+		overflow: auto;
+
+		>.scroller{
+			position: relative;
+			width: 100%;
+			height: auto;
+			min-height: 100%;
+			overflow: hidden;
+			background-color:@colorWhite;
+			
+			>.content-wrapper{
+				position: relative;
+				width: 100%;
+				height:auto;
+				background-image:@imageManDrinking;
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size: cover;
+				
+				overflow: hidden;
+				padding-bottom:30px;
+
+				.quiz-list{
+					position: relative;
+					width: 100%;
+					height: auto;
+					padding-top: 40px;
+					overflow: hidden;
+					-webkit-transition:-webkit-transform 0.4s 0.2s ease-out;
+					transition:transform 0.4s 0.2s ease-out;
+
+					.quiz-item{
+						position: relative;
+						width: 100%;
+						float: left;
+						height: auto;
+						border-width: 0px 30px;
+						border-style: solid;
+						border-color: @colorTransparent;
+
+						&.score{
+							min-height: 402px;
+							display: -webkit-box;
+							display: -webkit-flex;
+							display: flex;
+							-webkit-flex-direction: column;
+							flex-direction:column;
+
+							.yourscore{
+								position: relative;
+								width: 100%;
+								-webkit-flex-grow:1;
+								flex-grow:1;
+								display: -webkit-box;
+								display: -webkit-flex;
+								display: flex;
+								-webkit-justify-content: center;
+								justify-content: center;
+								-webkit-align-items: center;
+								align-items: center;
+								background-color: @colorWhite;
+
+								.score-container{
+									position: relative;
+									width: 100%;
+									.title{
+										position: relative;
+										width: 100%;
+										margin:0;
+										font-family: @fontSourceSansProSemiBold;
+										font-weight: normal;
+										color:@colorDarkBlue;
+										font-size:@xtralargeheader;
+										text-align: center;
+									}
+									.text{
+										position: relative;
+										width: 100%;
+										margin:0;
+										font-family: @fontSourceSansProSemiBold;
+										font-weight: normal;
+										color:@colorDarkBlue;
+										font-size:@sizeListHeader;
+										text-align: center;
+										margin-top: 10px;
+									}
+								}
+							}
+							.share{
+								position: relative;
+								width: 100%;
+								height:60px;
+								padding:10px;
+								background-color:fade(@colorWhite,80%);
+
+								.sharebox{
+									position: relative;
+									width: 100%;
+									height: 100%;
+									background-color:@colorWhite;
+									display: -webkit-box;
+									display: -webkit-flex;
+									display: flex;
+									-webkit-justify-content: center;
+									justify-content: center;
+									-webkit-align-items: center;
+									align-items: center;
+
+									.text{
+										position: relative;
+										width: 100%;
+										margin:0;
+										font-family: @fontSourceSansProXLight;
+										font-weight: 100;
+										color:@colorBlack;
+										font-size:@sizeSmallHeader;
+										text-align: center;
+									}
+								}
+							}
+						}
+						&:before{
+							content:'';
+							position: absolute;
+							top: -28px;
+							left: 5px;
+							width: 60px;
+							height: 60px;
+							z-index: 10;
+							background-repeat: no-repeat;
+							background-position: center;
+							background-size:contain;
+							background-image:@quizzesHomeIcon;
+						}
+
+						.question{
+							position: relative;
+							width: 100%;
+							padding: 20px 30px 40px 30px;
+							background-color: @colorWhite;
+
+							.title{
+								font-family: @fontSourceSansProRegular;
+								font-weight: normal;
+								color:@colorDarkBlue;
+								font-size:@sizeLargerBody;
+								margin: 0;
+								position: relative;
+								text-align: center;
+							}
+							.desc{
+								font-family: @fontSourceSansProSemiBold;
+								font-weight: normal;
+								color:@colorDarkBlue;
+								font-size:@sizeSubHeader;
+								margin: 0;
+								position: relative;
+								text-align: center;
+								margin-top:10px;	
+							}
+						}
+
+						.answer{
+							position: relative;
+							width: 100%;
+							padding:30px 10px 10px 10px;
+							background-color:fade(@colorWhite,80%);
+
+							.answer-list{
+								position: relative;
+								width: 100%;
+
+								.answer-item{
+									position: relative;
+									width: 100%;
+									min-height: 40px;
+									height: auto;
+									background-color:@colorWhite;
+									display: -webkit-box;
+									display: -webkit-flex;
+									display: flex;
+									-webkit-justify-content:center;
+									justify-content:center;
+									-webkit-align-items:center;
+									align-items:center;
+									margin-bottom:20px;
+
+									&:last-child{
+										margin-bottom:0;
+									}
+
+									.text{
+										font-family: @fontSourceSansProRegular;
+										font-weight: normal;
+										color:@colorBlack;
+										font-size:@sizeSmallHeader;
+										margin: 0;
+										position: relative;
+										text-align: center;
+									}
+
+									&.active{
+										background-color:@colorDarkBlue;
+
+										.text{
+											color:@colorYellow;
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			.previous-container{
+				position: relative;
+				width: 100%;
+				min-height: 45px;
+				height: auto;
+				margin-top: 30px;
+				margin-bottom: 20px;
+				padding: 0 20px;
+
+				.previous-button{
+					position: relative;
+					width: 100%;
+					height: 45px;
+					border:1px solid @colorGray;
+					display: -webkit-box;
+					display: -webkit-flex;
+					display: flex;
+					-webkit-justify-content:center;
+					justify-content:center;
+					-webkit-align-items:center;
+					align-items:center;
+					padding:0 10px;
+					margin-bottom: 10px;
+
+					&:before{
+						content:'';
+						position: absolute;
+						right: 20px;
+						top: 0;
+						width: 8px;
+						height:100%;
+						background-image:@button-right-arrow;
+						background-repeat: no-repeat;
+						background-position: center;
+						background-size:8px 11px;
+						-webkit-transition:-webkit-transform 0.4s ease-out;
+						transition:-webkit-transform 0.4s ease-out;
+					}
+
+					&.active:before{
+						-webkit-transform:rotate3d(0,0,1,90deg);
+						transform:rotate3d(0,0,1,90deg);
+					}
+
+					.text{
+						position: relative;
+						width: 100%;
+						margin:0;
+						font-family: @fontSourceSansProXLight;
+						font-weight: 100;
+						color:@colorGray;
+						font-size:@sizeSubHeader;
+						text-align: left;
+					}
+				}
+
+				.previous-list{
+					position: relative;
+					width: 100%;
+					height:0;
+					overflow: hidden;
+					-webkit-transition:height 0.4s ease-out;
+					transition:height 0.4s ease-out;
+					-webkit-transform:translate3d(0,0,0);
+					transform:translate3d(0,0,0);
+
+					.previous-item{
+						position: relative;
+						width: 100%;
+						height: auto;
+						opacity: 0;
+						padding: 10px;
+						border: 1px solid @colorTransparent;
+						background-color:@colorBreadCrumbWhite;
+						margin: 10px 0px;
+						-webkit-transition:opacity 0.4s ease-out;
+						transition:opacity 0.4s ease-out;
+						-webkit-transform:translate3d(0,0,0);
+						transform:translate3d(0,0,0);
+						.text{
+							position: relative;
+							width: 100%;
+							margin:0;
+							font-family: @fontSourceSansProXLight;
+							font-weight: 100;
+							color:@colorBlack;
+							font-size:@sizeSubHeader;
+							text-align: left;
+						}
+						&.noclick{
+							border:1px solid @colorGray;
+							background-color:@colorTransparent;
+
+							.text{
+								color:@colorGray;
+							}
+						}
+					}
+
+					&.active{
+						height:100%;
+
+						.previous-item{
+							opacity: 1;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media all and (max-width:320px){
+	#quizzes{
+		>.tab-arrows{
+			.tab-container{
+				.tab-slider{
+				}
+			}
+		}
+		>.content{
+			>.scroller{	
+				>.content-wrapper{		
+					padding-bottom:10px;
+					.quiz-list{
+						.quiz-item{
+							border-width: 0px 10px;
+
+							&.score{
+
+								.yourscore{
+									.score-container{
+										.title{
+											font-size:@xtralargeheader;
+										}
+										.text{
+											font-size:@sizeListHeader;
+										}
+									}
+								}
+								.share{
+									.sharebox{
+										.text{
+											font-size:@sizeSubHeader;
+										}
+									}
+								}
+							}
+							&:before{
+							}
+
+							.question{
+								padding: 20px;
+
+								.title{
+									font-size:@sizeLargerBody;
+								}
+								.desc{
+									font-size:@sizeSubHeader;
+								}
+							}
+
+							.answer{
+								
+								padding:20px 10px 10px 10px;
+
+								.answer-list{
+								
+
+									.answer-item{
+
+										
+
+										&:last-child{
+											
+										}
+
+										.text{
+											
+											font-size:@sizeSubHeader--medium;
+											
+										}
+
+										&.active{
+											background-color:@colorDarkBlue;
+
+											.text{
+												color:@colorYellow;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				.previous-container{
+					padding: 0 10px;
+					margin-top: 20px;
+					.previous-button{
+						
+						&:before{
+							right: 10px;
+						}
+
+						.text{
+							font-size:@sizeSubHeader--medium;
+						}
+					}
+
+					.previous-list{
+						.previous-item{
+							.text{
+								margin: 0;
+							}
+						}
+
+						&.active{
+							height:100%;
+
+							.previous-item{
+								opacity: 1;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+

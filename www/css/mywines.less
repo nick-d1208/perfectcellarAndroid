@@ -1,0 +1,991 @@
+#mywines{
+	background-color:@colorWhite;
+	.wrapper-scroller{
+		position: relative;
+		width: 100%;
+		height:calc(100% ~"-" @mp3HeaderHeight);
+		overflow: auto;
+
+		.scroller{
+			position: relative;
+			width: 100%;
+			height: auto;
+			min-height: 100%;
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-flex-direction: column;
+			flex-direction: column;
+
+			.subheader{
+				position: relative;
+				width: 100%;
+				height: 60px;
+				background-color: @colorWhite;
+				padding: 5px 30px;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-justify-content: center;
+				justify-content: center;
+				-webkit-align-items: center;
+				align-items: center;
+
+				.title{
+					position: relative;
+					width: 100%;
+					margin:0;
+					font-family: @fontSourceSansProLight;
+					font-weight: 100;
+					color:@colorBlack;
+					font-size:@sizeSmallHeader;
+					text-align: left;
+				}
+				.image{
+					position: relative;
+					width: 60px;
+					height: 60px;
+					background-repeat: no-repeat;
+					background-size: contain;
+					background-position: center;
+					background-image:@lessonsHomeIcon;
+				}
+			}
+			.content-wrapper{
+				position: relative;
+				width: 100%;
+				-webkit-flex:1;
+				flex:1;
+				overflow: hidden;
+
+				.wine-container{
+					position: relative;
+					width: 100%;
+					height: 310px;
+
+					.wine-list{
+						position: relative;
+						width: 100%;
+						height: 100%;
+						overflow: hidden;
+						margin-left: 25vw;
+
+						&.animate{
+							-webkit-transition:-webkit-transform 0.4s ease-out;
+							transition:transform 0.4s ease-out;
+						}
+
+						.wine-item{
+							position: relative;
+							width: calc(100vw ~"-" 50vw);
+							height: 100%;
+							float: left;
+							padding:0 1px;
+							
+							.image{
+								position: relative;
+								width: 100%;
+								height: 100%;
+								background-repeat: no-repeat;
+								background-size: cover;
+								background-position: center;
+							}
+						}
+					}
+					.click-me{
+						position: absolute;
+						top: 0;
+						left: 50%;
+						width: 50px;
+						height: 50px;
+						-webkit-transform: translate(-180%, 0);
+						transform: translate(-180%, 0);
+						background-size:contain;
+						background-position: center;
+						background-repeat: no-repeat;
+						background-image: @clickHereIcon;
+						pointer-events: none;
+					}
+					.bar{
+						position: absolute;
+						bottom: -25px;
+						left: 0px;
+						min-height: 50px;
+						height: auto;
+						width: 100%;
+						padding: 0px 20px;
+						-webkit-transform: translateZ(1px);
+						transform: translateZ(1px);
+
+						.content{
+							position: relative;
+							width: 100%;
+							height: auto;
+							background-color:@colorBreadCrumbWhite;
+							padding:0 10px;
+							
+							.bar-list{
+								position: relative;
+								width: 300%;
+								height: auto;
+								overflow: hidden;
+								min-height: 50px;
+								-webkit-transform: translate3d(0, 0, 0);
+								transform: translate3d(0, 0, 0);
+								-webkit-transition: height 0.4s ease-out, -webkit-transform 0s 0.2s linear;
+								transition: height 0.4s ease-out, transform 0s 0.2s linear;
+
+
+								.bar-item{
+									position: relative;
+									
+									width: 100%;
+									height: auto;
+									min-height: 50px;
+									float: left;
+									padding:5px 0px;
+									-webkit-transition:opacity 0.2s ease-out;
+									transition:opacity 0.2s ease-out;
+									opacity: 0;
+									display: -webkit-box;
+									display: -webkit-flex;
+									display: flex;
+									-webkit-justify-content: center;
+									justify-content: center;
+									-webkit-align-items: center;
+									align-items: center;
+									z-index: 1;
+
+									&.inactive{
+										opacity: 0;
+										z-index: 1;
+									}
+									&.active{
+										-webkit-transition-delay:0.2s;
+										transition-delay:0.2s;
+										opacity: 1;
+										z-index: 3;
+									}
+								}
+							}
+
+							.text{
+								position: relative;
+								width: 100%;
+								margin:0;
+								font-family: @fontSourceSansProLight;
+								font-weight: 100;
+								color:@colorBlack;
+								font-size:@sizeSmallHeader;
+								text-align: left;
+							}
+						}
+					}		
+				}
+				.previous-container{
+					position: relative;
+					width: 100%;
+					min-height: 45px;
+					height: auto;
+					margin-top: 50px;
+					padding: 0 20px;
+
+					.previous-button{
+						position: relative;
+						width: 100%;
+						height: 45px;
+						border:1px solid @colorGray;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display: flex;
+						-webkit-justify-content:center;
+						justify-content:center;
+						-webkit-align-items:center;
+						align-items:center;
+						padding:0 10px;
+						margin-bottom: 10px;
+
+						&:before{
+							content:'';
+							position: absolute;
+							right: 20px;
+							top: 0;
+							width: 8px;
+							height:100%;
+							background-image:@button-right-arrow;
+							background-repeat: no-repeat;
+							background-position: center;
+							background-size:8px 11px;
+							-webkit-transition:-webkit-transform 0.4s ease-out;
+							transition:-webkit-transform 0.4s ease-out;
+						}
+
+						&.active:before{
+							-webkit-transform:rotate3d(0,0,1,90deg);
+							transform:rotate3d(0,0,1,90deg);
+						}
+
+						.text{
+							position: relative;
+							width: 100%;
+							margin:0;
+							font-family: @fontSourceSansProXLight;
+							font-weight: 100;
+							color:@colorGray;
+							font-size:@sizeSubHeader;
+							text-align: left;
+						}
+					}
+
+					.previous-list{
+						position: relative;
+						width: 100%;
+						height:0;
+						overflow: hidden;
+						-webkit-transition:height 0.4s ease-out;
+						transition:height 0.4s ease-out;
+						-webkit-transform:translate3d(0,0,0);
+						transform:translate3d(0,0,0);
+
+						.previous-item{
+							position: relative;
+							width: 100%;
+							height: auto;
+							opacity: 0;
+							padding: 10px;
+							border: 1px solid @colorTransparent;
+							background-color:@colorBreadCrumbWhite;
+							margin: 10px 0px;
+							-webkit-transition:opacity 0.4s ease-out;
+							transition:opacity 0.4s ease-out;
+							-webkit-transform:translate3d(0,0,0);
+							transform:translate3d(0,0,0);
+
+							&:last-child{
+								margin-bottom:20px;
+							}
+
+							.text{
+								position: relative;
+								width: 100%;
+								margin:0;
+								font-family: @fontSourceSansProXLight;
+								font-weight: 100;
+								color:@colorBlack;
+								font-size:@sizeSubHeader;
+								text-align: left;
+							}
+						}
+
+						&.active{
+							height:100%;
+
+							.previous-item{
+								opacity: 1;
+							}
+						}
+					}
+				}
+				.generic-button-container{
+					position: absolute;
+					bottom: 0;
+					left: 0;
+					width: 100%;
+					min-height: 50px;
+					height: auto;
+					padding: 15px 20px;
+					background-color:@colorDarkBlue;
+
+					.generic-button{
+						position: relative;
+						width: 100%;
+						height: auto;
+						border:1px solid @colorYellow;
+						display: -webkit-box;
+						display: -webkit-flex;
+						display: flex;
+						-webkit-justify-content:center;
+						justify-content:center;
+						-webkit-align-items:center;
+						align-items:center;
+						padding: 10px 60px 10px 10px;
+
+						&:before{
+							content:'';
+							position: absolute;
+							right: 20px;
+							top: 0;
+							width: 20px;
+							height:100%;
+							background-image:@imageCart;
+							background-repeat: no-repeat;
+							background-position: center;
+							background-size:20px 20px;
+						}
+
+						.text{
+							position: relative;
+							width: 100%;
+							margin:0;
+							font-family: @fontSourceSansProLight;
+							font-weight: 100;
+							color:@colorYellow;
+							font-size:@sizeLargerBody;
+							text-align: left;
+						}
+					}
+				}
+			}
+		}
+	}	
+}
+
+
+#mywines-list{
+	background-color:@colorWhite;
+	&:before{
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0.3;
+		background-image:@imageWhiteBg;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: center;
+		/*-webkit-filter: blur(30px);
+		filter: blur(30px);*/
+	}
+	.wrapper-scroller{
+		position: relative;
+		width: 100%;
+		height:calc(100% ~"-" @mp3HeaderHeight);
+		overflow: auto;
+
+		.scroller{
+			position: relative;
+			width: 100%;
+			height: auto;
+			min-height: 100%;
+
+			>.video{
+					position: relative;
+					width: 100%;
+					height: 180px;
+					border:none;
+					padding:0;
+					margin:0;
+				}
+
+			.list{
+				position: relative;
+				width: 100%;
+				height: auto;
+				overflow: hidden;
+				padding: 10px 10px 10px 10px;
+
+				.list-item.content-box{
+					position: relative;
+					width: 100%;
+					padding: 20px 20px 10px 20px;
+					height:auto;
+					background-color:@colorBoxWhite;
+					margin-top: 35px;
+					overflow: visible;
+					-webkit-box-shadow: 0px 3px 3px 0px rgba(0,0,0,0.1);
+					box-shadow: 0px 3px 3px 0px rgba(0,0,0,0.1);
+
+					>.image{
+						position: absolute;
+						top: -28px;
+						right: 20px;
+						width: 50px;
+						height: 50px;
+						background-repeat: no-repeat;
+						background-size: contain;
+						background-position: center;
+						background-image:@tempIcon;
+					}
+
+					/* Append Icons */
+					&:first-child{
+						>.image{
+							background-image:@howToIcon;
+						}
+					}
+					&:nth-child(2){
+						>.image{
+							background-image:@lessonsHomeIcon;
+						}
+					}
+					&:nth-child(3){
+						>.image{
+							background-image:@matchMakerHomeIcon;
+						}
+					}
+					&:nth-child(4){
+						>.image{
+							background-image:@imageGrapes;
+						}
+					}
+
+
+					>.title{
+						position: absolute;
+						top: -20px;
+						left: 10px;
+						font-family: @fontSourceSansProSemiBold;
+						color:@colorDarkBlue;
+						font-weight: normal;
+						font-size: @sizeListHeader;
+
+						font-size: @sizeListItemTitle;
+						margin: 0;
+						width: 100%;
+						padding-right: 90px;
+						overflow: hidden;
+						white-space: nowrap;
+						text-overflow: ellipsis;
+					}
+					>.text{
+						position: relative;
+	                    width: 100%;
+	                    margin:0;
+	                    text-align: left;
+	                    font-family: @fontSourceSansProSemiBold;
+	                    color:@colorGrayText;
+						letter-spacing: 0px;
+						font-weight: normal;
+	                    font-size:@sizeBody;
+					}
+				}
+			}
+		}
+	}
+}
+/*
+#mywines-desc{
+	background-color:@colorWhite;
+	.wrapper-scroller{
+		position: relative;
+		width: 100%;
+		height:calc(100% ~"-" @mp3HeaderHeight);
+		overflow: hidden;
+
+		.scroller{
+			position: relative;
+			width: 100%;
+			height: auto;
+			min-height: 100%;
+			border-width: 180px 0px 30px 0px;
+			border-style: solid;
+			border-color: @colorTransparent;
+			z-index: 2;
+			pointer-events: none;
+
+			&:before{
+				content:'';
+				position: absolute;
+				top: -28px;
+				right: 15px;
+				width: 50px;
+				height: 50px;
+				z-index: 3;
+				background-repeat: no-repeat;
+				background-size: contain;
+				background-position: center;
+				background-image:@myWinesHomeIcon;
+			}
+			&.smalltop{
+				border-top-width: 40px;
+			}
+
+			.title{
+				position: relative;
+	            width: 100%;
+	            margin:0;
+	            text-align: center;
+	            font-family: @fontSourceSansProSemiBold;
+	            color:@colorDarkBlue;
+				letter-spacing: 0px;
+				font-weight: normal;
+	            font-size:@sizeListHeader;
+	            padding-left: 30px;
+				padding-right: 30px;
+				padding-top:30px;
+				background-color:@colorWhite;
+			}
+			.text{
+				position: relative;
+	            width: 100%;
+	            margin:0;
+	            text-align: left;
+	            font-family: @fontSourceSansProRegular;
+	            color:@colorBlack;
+				letter-spacing: 0px;
+				font-weight: normal;
+	            font-size:@sizeSmallHeader;	
+	            padding-left: 30px;
+				padding-right: 30px;
+				padding-top:10px;
+				background-color:@colorWhite;
+
+	            &:first-of-type{
+	            	padding-top:30px;
+	            }
+			}
+		}
+		>.image{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 180px;
+			background-repeat: no-repeat;
+			background-size:cover;
+			background-position: center;
+			background-image:@imageManDrinking;
+		}
+		>.video{
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 180px;
+			border:none;
+			padding:0;
+			margin:0;
+		}
+	}
+}*/
+
+#mywines-desc{
+	background-color:@colorWhite;
+	>.desc-content-container{
+
+		position: relative;
+		width: 100%;
+		height:calc(100% ~"-" @mp3HeaderHeight);
+		overflow: hidden;
+
+		>.content{
+			position: relative;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+
+			>.icon-container{
+				position: relative;
+				width: 100%;
+				height: 100px;
+				overflow: hidden;
+				background-image:@imageLessonBG;
+				background-repeat: no-repeat;
+				background-size: cover;
+				background-position: center;
+
+				&:before{
+					content:'';
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 100%;
+					height: 100%;
+					background-color:@colorWhite;
+					opacity:0.5;
+				}
+
+				.icon-list{
+					position: absolute;
+					top: 0;
+					left: calc(50vw ~"-" 50px);
+					width: 500px;
+					height: 100%;
+					padding: 20px 0px;
+ 
+					&.animate{
+						-webkit-transition:-webkit-transform 0.4s ease-out;
+						transition:transform 0.4s ease-out;
+					}
+
+					.icon-item{
+						position: relative;
+						float: left;
+						width: 60px;
+						height: 60px;
+						
+						border-width: 0 20px;
+						border-style: solid;
+						border-color: transparent;
+						-webkit-box-sizing: content-box;
+						box-sizing: content-box;
+						opacity: 0.5;
+						-webkit-transition:opacity 0.4s ease-out, -webkit-transform 0.4s ease-out;
+						transition:opacity 0.4s ease-out, transform 0.4s ease-out;
+						-webkit-transform:scale3d(1,1,1);
+						transform:scale3d(1,1,1);
+
+						.image{
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							background-repeat: no-repeat;
+							background-size: cover;
+							background-position: center;
+							background-image:@tempIcon;
+						}
+
+						/* Append Icons */
+						&:first-child{
+							>.image{
+								background-image:@howToIcon;
+							}
+						}
+						&:nth-child(2){
+							>.image{
+								background-image:@lessonsHomeIcon;
+							}
+						}
+						&:nth-child(3){
+							>.image{
+								background-image:@matchMakerHomeIcon;
+							}
+						}
+						&:nth-child(4){
+							>.image{
+								background-image:@imageGrapes;
+							}
+						}
+
+						&.active{
+							opacity: 1;
+							-webkit-transform:scale3d(1.08,1.08,1.08);
+							transform:scale3d(1.08,1.08,1.08);
+						}
+					}
+				}
+			}
+
+			>.desc-container{
+				position: relative;
+				width: 100%;
+				height: calc(100% ~"-" 100px);
+				overflow: hidden;
+
+				.desc-list{
+					position: relative;
+					width: 100%;
+					height:100%;
+					overflow: hidden;
+
+					&.animate{
+						-webkit-transition:-webkit-transform 0.4s ease-out;
+						transition:transform 0.4s ease-out;
+					}
+
+					.desc-item{
+						position: relative;
+						width: 100vw;
+						float: left;
+						height: 100%;
+						overflow: auto;
+
+						.scroller{
+							position: relative;
+							width: 100%;
+							height: auto;
+							min-height: 100%;
+							padding-top:20px;
+
+							.part-text{
+								position: relative;
+								width: 100%;
+								margin:0;
+								text-align: center;
+								font-family: @fontSourceSansProRegular;
+								color:@colorDarkBlue;
+								letter-spacing: 0px;
+								font-weight: normal;
+								font-size:@sizeLargerBody;
+								padding:0 30px;
+							}
+							.title{
+								position: relative;
+								width: 100%;
+								margin:0;
+								text-align: center;
+								font-family: @fontSourceSansProSemiBold;
+								color:@colorDarkBlue;
+								letter-spacing: 0px;
+								font-weight: normal;
+								font-size:@sizeListHeader;
+								padding:0 30px;
+							}
+							.subtitle{
+								position: relative;
+								width: 100%;
+								margin:0;
+								text-align: left;
+								font-family: @fontSourceSansProSemiBold;
+								color:@colorBlack;
+								letter-spacing: 0px;
+								font-weight: normal;
+								font-size:@sizeHeader;
+								margin-top:30px;
+								padding:0 30px;
+							}
+							.text{
+								position: relative;
+								width: 100%;
+								margin:0;
+								text-align: left;
+								font-family: @fontSourceSansProRegular;
+								color:@colorBlack;
+								letter-spacing: 0px;
+								font-weight: normal;
+								font-size:@sizeSmallHeader;
+								padding:0 30px;
+								margin-bottom:10px;
+								&:last-of-type{
+									margin-bottom:0;
+								}
+							}
+							.image{
+								position: relative;
+								width: 100%;
+								padding-bottom:50%;
+								background-repeat: no-repeat;
+								background-size: cover;
+								background-position: center;
+								margin-top:30px;
+								/*background-image:@imageManDrinking;*/
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+@media all and (max-width:320px){
+	#mywines{
+	.wrapper-scroller{
+		.scroller{
+			.subheader{
+				padding: 5px 10px;
+				.title{
+					font-size:@sizeSmallHeader;
+				}
+				.image{
+				}
+			}
+			.content-wrapper{
+				height:auto;
+				-webkit-flex:none;
+				flex:none;
+
+				.wine-container{
+					height: 280px;
+
+					.wine-list{
+						
+
+						&.animate{
+							-webkit-transition:-webkit-transform 0.4s ease-out;
+							transition:transform 0.4s ease-out;
+						}
+
+						.wine-item{
+							
+							.image{
+							}
+						}
+					}
+					.bar{
+						padding: 0px 5px;
+
+						.content{
+							
+							.bar-list{
+								
+								.bar-item{
+			
+								}
+							}
+
+							.text{
+							
+								font-size:@sizeSubHeader--medium;
+								
+							}
+						}
+					}		
+				}
+				.previous-container{
+					padding: 0 10px;
+					.previous-button{
+						
+						&:before{
+							right: 10px;
+						}
+
+						.text{
+							font-size:@sizeSubHeader--medium;
+						}
+					}
+
+					.previous-list{
+						.previous-item{
+							.text{
+								margin: 0;
+							}
+						}
+
+						&.active{
+							height:100%;
+
+							.previous-item{
+								opacity: 1;
+							}
+						}
+					}
+				}
+				.generic-button-container{
+					position: relative;
+					bottom: initial;
+					left: initial;
+					margin-top: 25px;
+
+					.generic-button{
+						padding: 10px 20px 10px 10px;
+
+						&:before{
+							right: 10px;
+							top: 0;
+						}
+
+						.text{
+							font-size:@sizeSubHeader--medium;
+						}
+					}
+				}
+			}
+		}
+	}	
+}
+/*#mywines-desc{
+	.wrapper-scroller{
+		.scroller{
+			border-width: 180px 0px 10px 0px;
+	
+			&:before{
+			}
+			&.smalltop{
+			}
+
+			.title{
+				padding-left: 10px;
+				padding-right: 10px;
+	            font-size:@sizeListItemTitle;
+			}
+			.text{
+				
+	            font-size:@sizeSubHeader--medium;
+	            padding-left: 10px;
+				padding-right: 10px;
+				
+	            &:first-of-type{
+	            	padding-top:20px;
+	            }
+			}
+		}
+		>.image{
+		}
+		>.video{
+		}
+	}
+}*/
+
+#mywines-desc{
+	>.desc-content-container{
+
+		>.content{
+		
+			>.icon-container{
+
+				&:before{
+				}
+
+				.icon-list{
+					
+					&.animate{
+	
+					}
+
+					.icon-item{
+			
+						.image{
+	
+						}
+
+						&.active{
+						
+						}
+					}
+				}
+			}
+
+			>.desc-container{
+			
+				.desc-list{
+					
+
+					&.animate{
+						
+					}
+
+					.desc-item{
+					
+						.scroller{
+							
+							.part-text{
+								
+								font-size:@sizeLargerBody--medium;
+								padding:0 10px;
+							}
+							.title{
+								
+								font-size:@sizeListItemTitle;
+								padding:0 10px;
+							}
+							.subtitle{
+								
+								font-size:@sizeSubHeader;
+								margin-top:20px;
+								padding:0 10px;
+							}
+							.text{
+								
+								font-size:@sizeSubHeader--medium;
+								padding:0 10px;
+								margin-bottom:10px;
+								&:last-of-type{
+									margin-bottom:0;
+								}
+							}
+							.image{
+								margin-top:20px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+}
